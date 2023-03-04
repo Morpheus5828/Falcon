@@ -2,12 +2,17 @@ package org.falcon.server;
 
 public class MessageManagment {
     private final int COMMAND = 0;
+    private final int USER_ID = 1;
     private String nativeMessage;
     private String message;
+    private String username;
 
     public MessageManagment(String nativeMessage) {
         this.nativeMessage = nativeMessage;
         this.message = "";
+        this.username = "";
+        commandAnalyse(cutMessage());
+
     }
 
     public String[] cutMessage() {
@@ -16,8 +21,8 @@ public class MessageManagment {
 
     public void commandAnalyse(String[] cuttingMessage) {
         if(cuttingMessage[COMMAND].equals("PUBLISH")) {
-            setMessage(cuttingMessage);
-            System.out.println(this.message);
+            System.out.println(cuttingMessage[USER_ID]);
+
         }
     }
 
@@ -30,4 +35,10 @@ public class MessageManagment {
     public String getMessage() {
         return this.message;
     }
+
+    public void checkUser() {
+
+    }
+
+
 }

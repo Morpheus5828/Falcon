@@ -8,9 +8,16 @@ import java.sql.SQLException;
 public class TestUser {
     @Test
     public void testInsertUser() throws SQLException, ClassNotFoundException {
+        //Add name which not in database
+        /*User user = new User("Manon");
+        user.initDataBase();
+        user.insertUser();*/
+    }
+    @Test
+    public void testAlreadyInDb() throws SQLException, ClassNotFoundException {
         User user = new User("Manon");
         user.initDataBase();
-        user.insertUser();
+        System.out.println(user.alreadyInDb());
     }
 
 }

@@ -3,10 +3,13 @@ package org.falcon.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 public class RudimentaryServer {
@@ -48,10 +51,15 @@ public class RudimentaryServer {
         try {
             SocketChannel csc = ((SocketChannel) key.channel());
             ByteBuffer buffer = ByteBuffer.allocate(2048);
-            int nBytes;
-            nBytes = csc.read(buffer);
+            csc.read(buffer);
             buffer.flip();
-            System.out.println(nBytes);
+            byte[] byteArray = new byte[11];
+            buffer.get(byteArray);
+            new MessageManagment(new String(byteArray));
+            buffer.clear();
+
+
+
         } catch (Exception eW) {
 
         }
