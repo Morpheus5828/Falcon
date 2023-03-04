@@ -59,7 +59,6 @@ public class RudimentaryServer {
             buffer.get(byteArray);
             System.out.println(new String(byteArray));
             new MessageManagment(new String(byteArray));
-            //mm.commandAnalyse(mm.cutMessage());
             buffer.clear();
 
 

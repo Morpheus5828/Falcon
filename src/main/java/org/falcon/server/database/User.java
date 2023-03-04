@@ -17,7 +17,6 @@ public class User extends DataBaseManagment{
     }
 
     public void insertUser() throws SQLException, ClassNotFoundException {
-        //Class.forName("org.h2.Driver");
         initDataBase();
         String sql = "INSERT INTO username VALUES(?)";
 
@@ -32,7 +31,6 @@ public class User extends DataBaseManagment{
     }
 
     public boolean alreadyInDb() throws SQLException, ClassNotFoundException {
-        //Class.forName("org.h2.Driver");
         initDataBase();
         String sql = "SELECT * FROM USERNAME";
 
