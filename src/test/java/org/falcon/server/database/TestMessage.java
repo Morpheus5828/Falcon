@@ -11,6 +11,11 @@ public class TestMessage {
         Message message = new Message("Manon", "Ceci est un très long text");
         message.initDataBase();
         message.insertMessage();
+    }
 
+    @Test public void testGetRecentMessage() throws SQLException, ClassNotFoundException{
+        Message message = new Message("Manon", "Ceci est un très long text");
+        message.initDataBase();
+        message.getRecentMessage();
     }
 }

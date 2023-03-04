@@ -2,6 +2,7 @@ package org.falcon.server.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,23 +38,27 @@ public class Message extends DataBaseManagment{
         conn.close();
     }
 
-   /* public List<String> getRecentMessage() throws SQLException {
+    public void getRecentMessage() throws SQLException {
         initDataBase();
-        String sql = "SELECT * FROM USERNAME";
+        String sql = "SELECT * FROM MESSAGE_USER ORDER BY POST_DATE ";
 
         stmt = conn.prepareStatement(sql);
         ResultSet dbResult = stmt.executeQuery();
 
+        List<String> messages = new ArrayList<>();
+
         while(dbResult.next()) {
-            if(dbResult.getString("NAME").equals(this.name)) {
-                stmt.close();
-                conn.close();
-            }
+            String message = dbResult.getString("MESSAGE") + " from: " +
+                    dbResult.getString("NAME") + " posted: " +
+                    dbResult.getTimestamp("POST_DATE");
+            messages.add(message);
         }
+
+        for(String s : messages) System.out.println(s);
 
         stmt.close();
         conn.close();
-    }*/
+    }
 
 
 
