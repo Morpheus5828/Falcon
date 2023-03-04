@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class TestUser {
     @Test
     public void testInsertUser() throws SQLException, ClassNotFoundException {
-        User user = new User(12, "Manon", "J'aime pas la neige");
+        User user = new User("Manon");
         user.initDataBase();
         user.insertUser();
     }
