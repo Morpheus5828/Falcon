@@ -11,14 +11,14 @@ import java.util.Set;
 public class User extends DataBaseManagment{
     private String name;
 
-    public User(String name) throws SQLException {
+    public User(String name) {
         super();
         this.name = name;
     }
 
     public void insertUser() throws SQLException, ClassNotFoundException {
-        Class.forName("org.h2.Driver");
-
+        //Class.forName("org.h2.Driver");
+        initDataBase();
         String sql = "INSERT INTO username VALUES(?)";
 
         stmt = conn.prepareStatement(sql);
@@ -32,8 +32,8 @@ public class User extends DataBaseManagment{
     }
 
     public boolean alreadyInDb() throws SQLException, ClassNotFoundException {
-        Class.forName("org.h2.Driver");
-
+        //Class.forName("org.h2.Driver");
+        initDataBase();
         String sql = "SELECT * FROM USERNAME";
 
         stmt = conn.prepareStatement(sql);

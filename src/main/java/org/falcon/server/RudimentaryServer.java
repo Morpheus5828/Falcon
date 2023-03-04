@@ -1,5 +1,7 @@
 package org.falcon.server;
 
+import org.falcon.server.database.User;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -18,7 +20,7 @@ public class RudimentaryServer {
             ServerSocketChannel ssc = ServerSocketChannel.open();
             Selector selector = Selector.open();
             ssc.bind(new InetSocketAddress(12345));
-
+            System.out.println("\t\nSTARTING SERVER FALCON");
             SocketChannel sc = ssc.accept();
             sc.configureBlocking(false);
             ssc.configureBlocking(false);
@@ -53,9 +55,11 @@ public class RudimentaryServer {
             ByteBuffer buffer = ByteBuffer.allocate(2048);
             csc.read(buffer);
             buffer.flip();
-            byte[] byteArray = new byte[11];
+            byte[] byteArray = new byte[35];
             buffer.get(byteArray);
+            System.out.println(new String(byteArray));
             new MessageManagment(new String(byteArray));
+            //mm.commandAnalyse(mm.cutMessage());
             buffer.clear();
 
 

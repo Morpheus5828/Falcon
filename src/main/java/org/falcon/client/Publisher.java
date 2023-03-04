@@ -21,13 +21,13 @@ public class Publisher {
             while(true) {
                 Scanner scanner = new Scanner(System.in);
                 // when user finished, he must enter '-end'
-                while(scanner.hasNext()) {
+                //while(scanner.hasNext()) {
                     command = scanner.nextLine();
                     OutputStream out = client.getOutputStream();
                     PrintWriter writer = new PrintWriter(out, true);
                     writer.println(command);
-                    if(client.equals("-end")) break;
-                }
+                    //if(client.equals("-end")) break;
+                //}
 
             }
             //client.close();
@@ -39,3 +39,4 @@ public class Publisher {
 
     }
 }
+

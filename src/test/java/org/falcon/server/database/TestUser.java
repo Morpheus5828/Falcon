@@ -9,7 +9,7 @@ public class TestUser {
     @Test
     public void testInsertUser() throws SQLException, ClassNotFoundException {
         //Add name which not in database
-        /*User user = new User("Manon");
+        /*User user = new User("");
         user.initDataBase();
         user.insertUser();*/
     }
