@@ -48,20 +48,25 @@ public class CentralServer {
         try {
             System.out.println("New Client connection");
             SocketChannel client = (SocketChannel) key.channel();
-            ByteBuffer buffer = ByteBuffer.allocate(256);
+            ByteBuffer buffer = ByteBuffer.allocate(2058);
             client.read(buffer);
             MessageManagment mm = new MessageManagment(new String(buffer.array()).trim());
-
+            System.out.println(mm.messageToClient());
             /* Server -> Client */
-            //System.out.println(new String(buffer.array()).trim());
-            /*buffer.flip();
-            client.write(buffer);
-            buffer.clear();*/
-            buffer.clear();
+            /*buffer.clear();
             buffer.put(mm.messageToClient().getBytes());
             buffer.flip();
             client.write(buffer);
-            buffer.clear();
+            buffer.clear();*/
+
+            for(String index : mm.messageToClient()) {
+                buffer.clear();
+                buffer.put(index.getBytes());
+                buffer.flip();
+                client.write(buffer);
+                buffer.clear();
+            }
+
             client.close();
 
         } catch (Exception e) {

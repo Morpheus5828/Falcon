@@ -19,6 +19,11 @@ public class Message extends DataBaseManagment{
         this.message = message;
     }
 
+    public Message(String user) {
+        super();
+        this.user = user;
+    }
+
     public void insertMessage() throws SQLException, ClassNotFoundException {
         //Class.forName("org.h2.Driver");
         initDataBase();
@@ -52,6 +57,29 @@ public class Message extends DataBaseManagment{
                     dbResult.getString("NAME") + " posted: " +
                     dbResult.getTimestamp("POST_DATE");
             messages.add(message);
+        }
+
+        stmt.close();
+        conn.close();
+
+        return messages;
+    }
+
+    public List<String> getMessageFromUser() throws SQLException {
+        initDataBase();
+        String sql = "SELECT MESSAGE, POST_DATE, NAME FROM MESSAGE_USER ORDER BY POST_DATE;";
+
+        stmt = conn.prepareStatement(sql);
+        ResultSet dbResult = stmt.executeQuery();
+
+        List<String> messages = new ArrayList<>();
+
+        while(dbResult.next()) {
+            if(dbResult.getString("NAME").equals(this.user)) {
+                String message = dbResult.getString("MESSAGE") + "publish at: " +
+                        dbResult.getString("POST_DATE") + ";";
+                messages.add(message);
+            }
         }
 
         stmt.close();
