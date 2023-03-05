@@ -1,9 +1,6 @@
 package org.falcon.client;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -18,19 +15,26 @@ public class Publisher {
             client.connect(new InetSocketAddress("localhost", 12345));
             String command = "";
 
-            while(true) {
-                Scanner scanner = new Scanner(System.in);
-                // when user finished, he must enter '-end'
-                //while(scanner.hasNext()) {
-                    command = scanner.nextLine();
-                    OutputStream out = client.getOutputStream();
-                    PrintWriter writer = new PrintWriter(out, true);
-                    writer.println(command);
-                    //if(client.equals("-end")) break;
-                //}
+            System.out.print(">: Enter @user: \t\n--> ");
+            Scanner scanner = new Scanner(System.in);
+            String user = scanner.nextLine();
 
-            }
-            //client.close();
+            System.out.print("\n>: Enter message: \t\n--> ");
+            Scanner scanner1 = new Scanner(System.in);
+            String message = scanner1.nextLine();
+
+            command = "PUBLISH author:@" + user + " " + message;
+
+            OutputStream out = client.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println(command);
+
+            InputStream input = client.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            System.out.println(reader.readLine());
+
+
+
 
         } catch (ConnectException e) {
             System.out.println("ERROR 500 - Connection Failed, please try again");

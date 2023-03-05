@@ -1,20 +1,15 @@
 package org.falcon.server;
 
-import org.falcon.server.database.User;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-public class RudimentaryServer {
+public class CentralServer {
     public static void main(String[] args) {
         try {
             ServerSocketChannel ssc = ServerSocketChannel.open();
@@ -51,21 +46,42 @@ public class RudimentaryServer {
 
     private static void handleClientRequest(SelectionKey key) throws IOException {
         try {
-            SocketChannel csc = ((SocketChannel) key.channel());
-            ByteBuffer buffer = ByteBuffer.allocate(2048);
-            csc.read(buffer);
-            buffer.flip();
-            byte[] byteArray = new byte[35];
-            buffer.get(byteArray);
-            System.out.println(new String(byteArray));
-            new MessageManagment(new String(byteArray));
+            System.out.println("New Client connection");
+            SocketChannel client = (SocketChannel) key.channel();
+            ByteBuffer buffer = ByteBuffer.allocate(256);
+            client.read(buffer);
+            MessageManagment mm = new MessageManagment(new String(buffer.array()).trim());
+
+            /* Server -> Client */
+            //System.out.println(new String(buffer.array()).trim());
+            /*buffer.flip();
+            client.write(buffer);
+            buffer.clear();*/
             buffer.clear();
+            buffer.put(mm.messageToClient().getBytes());
+            buffer.flip();
+            client.write(buffer);
+            buffer.clear();
+            client.close();
 
-
-
-        } catch (Exception eW) {
-
+        } catch (Exception e) {
+            //e.printStackTrace();
         }
     }
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

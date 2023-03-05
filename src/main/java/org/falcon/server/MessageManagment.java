@@ -8,6 +8,7 @@ import java.sql.SQLException;
 public class MessageManagment {
     private final int COMMAND = 0;
     private final int USER_ID = 1;
+    private String messageToClient;
     private String nativeMessage;
     private String message;
     private String username;
@@ -16,6 +17,7 @@ public class MessageManagment {
         this.nativeMessage = nativeMessage;
         this.message = "";
         this.username = "";
+        this.messageToClient = "";
         commandAnalyse(cutMessage());
     }
 
@@ -35,6 +37,7 @@ public class MessageManagment {
                 if(checkUser()) {
                     setMessage(cuttingMessage);
                     new Message(this.username, this.message).insertMessage();
+                    this.messageToClient = "Message has been add successfully in database";
                 }
 
             }
@@ -42,6 +45,10 @@ public class MessageManagment {
             System.err.println("ERROR WHEN ANALYSING");
             e.printStackTrace();
         }
+    }
+
+    public String messageToClient() {
+        return this.messageToClient;
     }
 
 /* PUBLISH Command */

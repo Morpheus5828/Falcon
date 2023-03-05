@@ -38,7 +38,7 @@ public class Message extends DataBaseManagment{
         conn.close();
     }
 
-    public void getRecentMessage() throws SQLException {
+    public List<String> getRecentMessage() throws SQLException {
         initDataBase();
         String sql = "SELECT * FROM MESSAGE_USER ORDER BY POST_DATE ";
 
@@ -54,10 +54,10 @@ public class Message extends DataBaseManagment{
             messages.add(message);
         }
 
-        for(String s : messages) System.out.println(s);
-
         stmt.close();
         conn.close();
+
+        return messages;
     }
 
 
