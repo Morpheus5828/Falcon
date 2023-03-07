@@ -25,4 +25,9 @@ public class TestMessageManagment {
 
     }
 
+    @Test
+    public void testReplyMessage() throws SQLException, ClassNotFoundException {
+        new MessageManagment("REPLY author:@morpheus5828 reply_to_id:146");
+    }
+
 }

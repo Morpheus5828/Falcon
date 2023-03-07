@@ -5,20 +5,27 @@ import org.falcon.server.database.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MessageManagment {
     private final int COMMAND = 0;
     private final int USER_ID = 1;
+    private final int MESSAGE_ID = 1;
+    private final int REPLY_ID = 2;
+    private final int REPLY_ID_HEADER = 0;
     private List<String> messageToClient;
     private String nativeMessage;
     private String message;
     private String username;
+    private String replyId;
+
 
     public MessageManagment(String nativeMessage) throws SQLException, ClassNotFoundException {
         this.nativeMessage = nativeMessage;
         this.message = "";
         this.username = "";
+        this.replyId = "";
         this.messageToClient = new ArrayList<>();
         commandAnalyse(cutMessage());
     }
@@ -29,6 +36,10 @@ public class MessageManagment {
 
     public void cutMessageToExtractUsername(String userSentence) {
         this.username = userSentence.split("@")[USER_ID];
+    }
+
+    public String[] cutReplyId(String userSentence) {
+        return userSentence.split(":");
     }
 
     public void commandAnalyse(String[] cuttingMessage) throws SQLException, ClassNotFoundException {
@@ -44,10 +55,26 @@ public class MessageManagment {
                 else this.messageToClient.add("User not in database");
             }
 
-            if(cuttingMessage[COMMAND].equals("RCV_MSG")) {
+            else if(cuttingMessage[COMMAND].equals("RCV_MSG")) {
                 cutMessageToExtractUsername(cutMessage()[USER_ID]);
                 if(checkUser())
                     this.messageToClient = new Message(this.username).getMessageFromUser();
+                else this.messageToClient.add("User not in database");
+            }
+
+            else if (cuttingMessage[COMMAND].equals("REPLY")) {
+                cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                if(checkUser()) {
+                    String reply = cutMessage()[REPLY_ID];
+                    this.replyId = cutReplyId(reply)[MESSAGE_ID];
+                    if(cutReplyId(reply)[REPLY_ID_HEADER].equals("reply_to_id")) {
+                        System.out.println("id: " + this.replyId);
+                        Message message = new Message(Integer.parseInt(this.replyId));
+                        String msg_to_reply = message.getMessageFromId();
+                        Message repliedMessage = new Message(this.username, msg_to_reply, Integer.parseInt(this.replyId));
+                        repliedMessage.insertMessage();
+                    }
+                }
                 else this.messageToClient.add("User not in database");
             }
 
