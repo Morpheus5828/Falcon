@@ -6,9 +6,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class Publisher {
+public class Repost {
     public static void main(String[] args) throws IOException {
-        System.out.println("\t\n-> WELCOME TO FALCON APP Publisher Client");
+        System.out.println("\t\n-> WELCOME TO FALCON APP Repost Client");
         Socket client = new Socket();
 
         try {
@@ -19,12 +19,12 @@ public class Publisher {
             Scanner scanner = new Scanner(System.in);
             String user = scanner.nextLine();
 
-            System.out.print("\n>: Enter message: \t\n--> ");
+            System.out.print("\n>: Enter message_id: \t\n--> ");
             Scanner scanner1 = new Scanner(System.in);
             String message = scanner1.nextLine();
 
-            command = "PUBLISH author:@" + user + " " + message;
-
+            command = "REPUBLISH author:@" + user + " msg_id:" + message;
+            System.out.println(command);
             OutputStream out = client.getOutputStream();
             PrintWriter writer = new PrintWriter(out, true);
             writer.println(command);
@@ -43,4 +43,3 @@ public class Publisher {
 
     }
 }
-

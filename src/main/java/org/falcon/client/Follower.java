@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Follower {
     public static void main(String[] args) throws IOException {
-        System.out.println("\t\n-> WELCOME TO FALCON APP");
+        System.out.println("\t\n-> WELCOME TO FALCON APP Follower Client");
         Socket client = new Socket();
 
         try {

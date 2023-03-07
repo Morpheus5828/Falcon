@@ -45,37 +45,64 @@ public class MessageManagment {
     public void commandAnalyse(String[] cuttingMessage) throws SQLException, ClassNotFoundException {
         try {
             System.out.println("Starting command analyse ... please hold on");
-            if(cuttingMessage[COMMAND].equals("PUBLISH")) {
-                cutMessageToExtractUsername(cutMessage()[USER_ID]);
-                if(checkUser()) {
-                    setMessage(cuttingMessage);
-                    new Message(this.username, this.message).insertMessage();
-                    this.messageToClient.add("Message has been add successfully in database");
-                }
-                else this.messageToClient.add("User not in database");
-            }
 
-            else if(cuttingMessage[COMMAND].equals("RCV_MSG")) {
-                cutMessageToExtractUsername(cutMessage()[USER_ID]);
-                if(checkUser())
-                    this.messageToClient = new Message(this.username).getMessageFromUser();
-                else this.messageToClient.add("User not in database");
-            }
-
-            else if (cuttingMessage[COMMAND].equals("REPLY")) {
-                cutMessageToExtractUsername(cutMessage()[USER_ID]);
-                if(checkUser()) {
-                    String reply = cutMessage()[REPLY_ID];
-                    this.replyId = cutReplyId(reply)[MESSAGE_ID];
-                    if(cutReplyId(reply)[REPLY_ID_HEADER].equals("reply_to_id")) {
-                        System.out.println("id: " + this.replyId);
-                        Message message = new Message(Integer.parseInt(this.replyId));
-                        String msg_to_reply = message.getMessageFromId();
-                        Message repliedMessage = new Message(this.username, msg_to_reply, Integer.parseInt(this.replyId));
-                        repliedMessage.insertMessage();
-                    }
+            switch (cuttingMessage[COMMAND]) {
+                case "PUBLISH" -> {
+                    cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                    if (checkUser()) {
+                        setMessage(cuttingMessage);
+                        new Message(this.username, this.message).insertMessage();
+                        this.messageToClient.add("Message has been add successfully in database");
+                    } else this.messageToClient.add("User not in database");
                 }
-                else this.messageToClient.add("User not in database");
+                case "RCV_MSG" -> {
+                    cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                    if (checkUser())
+                        this.messageToClient = new Message(this.username).getMessageFromUser();
+                    else this.messageToClient.add("User not in database");
+                }
+                case "REPUBLISH" -> {
+                    cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                    if (checkUser()) {
+                        String reply = cutMessage()[REPLY_ID];
+                        this.replyId = cutReplyId(reply)[MESSAGE_ID];
+                        if (cutReplyId(reply)[REPLY_ID_HEADER].equals("msg_id")) {
+                            System.out.println("id: " + this.replyId);
+                            Message message = new Message(Integer.parseInt(this.replyId));
+                            String msg_to_reply = message.getMessageFromId();
+                            Message repliedMessage = new Message(
+                                    this.username,
+                                    msg_to_reply,
+                                    Integer.parseInt(this.replyId),
+                                    false,
+                                    true
+                            );
+                            repliedMessage.insertMessage();
+                            this.messageToClient.add("OK");
+                        }
+                        else this.messageToClient.add("ERROR - Not good message id header");
+                    } else this.messageToClient.add("ERROR - User not in database");
+                }
+                case "REPLY" -> {
+                    cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                    if (checkUser()) {
+                        String reply = cutMessage()[REPLY_ID];
+                        this.replyId = cutReplyId(reply)[MESSAGE_ID];
+                        if (cutReplyId(reply)[REPLY_ID_HEADER].equals("reply_to_id")) {
+                            System.out.println("id: " + this.replyId);
+                            Message message = new Message(Integer.parseInt(this.replyId));
+                            String msg_to_reply = message.getMessageFromId();
+                            Message repliedMessage = new Message(
+                                    this.username,
+                                    msg_to_reply,
+                                    Integer.parseInt(this.replyId),
+                                    true,
+                                    false
+                            );
+                            repliedMessage.insertMessage();
+                        } else this.messageToClient.add("ERROR - Not good reply id header");
+                    } else this.messageToClient.add("ERROR - User not in database");
+                }
             }
 
 

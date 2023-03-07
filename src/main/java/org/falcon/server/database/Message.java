@@ -13,6 +13,7 @@ public class Message extends DataBaseManagment{
     private String message;
     private String user;
     private boolean replyCondition;
+    private boolean republishCondition;
 
     public Message(String user, String message) {
         /* Constructor to insert message */
@@ -21,16 +22,18 @@ public class Message extends DataBaseManagment{
         this.id = (int) (Math.random() * 1500);
         this.message = message;
         this.replyCondition = false;
+        this.republishCondition = false;
     }
 
-    public Message(String user, String message, int replyId) {
-        /* Constructor to reply message */
+    public Message(String user, String message, int replyId, boolean replyCondition, boolean republishCondition) {
+        /* Constructor to republish and reply message */
         super();
         this.user = user;
         this.id = (int) (Math.random() * 1500);
         this.replyId = replyId;
         this.message = message;
-        this.replyCondition = true;
+        this.replyCondition = replyCondition;
+        this.republishCondition = republishCondition;
     }
 
     public Message(int id) {
@@ -56,22 +59,37 @@ public class Message extends DataBaseManagment{
         stmt = conn.prepareStatement(sql);
         stmt.setString(1, this.user);
         stmt.setInt(2, this.id);
-        stmt.setString(3, this.message);
         stmt.setTimestamp(4, new java.sql.Timestamp(utilDate.getTime()));
 
-        if(!replyCondition) {
-            stmt.setInt(5, 0);
-            stmt.setString(6, null);
-
-            stmt.executeUpdate();
-            System.out.println("Message has been INSERT successfully");
-        } else {
+        if(replyCondition) {
+            stmt.setString(3, "null");
             stmt.setInt(5, this.replyId);
             stmt.setString(6, this.message);
 
             stmt.executeUpdate();
             System.out.println("Message has been REPLY successfully");
         }
+
+        else if(republishCondition) {
+            // republish
+            stmt.setString(3, this.message);
+            stmt.setInt(5, this.replyId);
+            stmt.setString(6, this.message);
+
+            stmt.executeUpdate();
+            System.out.println("Message has been REPUBLISH successfully");
+        }
+
+        else {
+            stmt.setString(3, this.message);
+            stmt.setInt(5, 0);
+            stmt.setString(6, "null");
+
+            stmt.executeUpdate();
+            System.out.println("Message has been INSERT successfully");
+        }
+
+
         stmt.close();
         conn.close();
 

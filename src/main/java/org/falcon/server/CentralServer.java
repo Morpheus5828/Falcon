@@ -51,13 +51,6 @@ public class CentralServer {
             ByteBuffer buffer = ByteBuffer.allocate(2058);
             client.read(buffer);
             MessageManagment mm = new MessageManagment(new String(buffer.array()).trim());
-            System.out.println(mm.messageToClient());
-            /* Server -> Client */
-            /*buffer.clear();
-            buffer.put(mm.messageToClient().getBytes());
-            buffer.flip();
-            client.write(buffer);
-            buffer.clear();*/
 
             for(String index : mm.messageToClient()) {
                 buffer.clear();
