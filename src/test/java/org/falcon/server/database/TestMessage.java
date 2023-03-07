@@ -22,6 +22,12 @@ public class TestMessage {
     @Test public void testGetMessageFromUser() throws SQLException {
         Message message = new Message("Manon");
         message.initDataBase();
-        System.out.println(message.getMessageFromUser().toString());
+        //System.out.println(message.getMessageFromUser().toString());
+    }
+
+    @Test public void testGetMessageFromId() throws SQLException {
+        Message message = new Message(104);
+        message.initDataBase();
+        System.out.println(message.getMessageFromId());
     }
 }
