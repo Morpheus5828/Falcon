@@ -9,13 +9,13 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-public class CentralServer {
+public class CentralMicroblog {
     public static void main(String[] args) {
         try {
             ServerSocketChannel ssc = ServerSocketChannel.open();
             Selector selector = Selector.open();
             ssc.bind(new InetSocketAddress(12345));
-            System.out.println("\t\nSTARTING CentralServer FALCON");
+            System.out.println("\t\nSTARTING CentralMicroblog FALCON");
             SocketChannel sc = ssc.accept();
             sc.configureBlocking(false);
             ssc.configureBlocking(false);
@@ -45,16 +45,19 @@ public class CentralServer {
     }
 
     private static void handleClientRequest(SelectionKey key) throws IOException {
+        FluxManagment flux = new FluxManagment();
         try {
             System.out.println("New Client connection");
             SocketChannel client = (SocketChannel) key.channel();
             ByteBuffer buffer = ByteBuffer.allocate(2058);
             client.read(buffer);
             MessageManagment mm = new MessageManagment(new String(buffer.array()).trim());
-
-            for(String index : mm.messageToClient()) {
+            if(mm.messageToClient().get(0).equals("true")) {
+                flux.addNewFlux(mm.getUsername());
+            } else {
+                // return error to client because no in database
                 buffer.clear();
-                buffer.put(index.getBytes());
+                buffer.put(mm.messageToClient().get(0).getBytes());
                 buffer.flip();
                 client.write(buffer);
                 buffer.clear();
@@ -67,19 +70,10 @@ public class CentralServer {
         }
     }
 
+    private static void setUpFlux(SelectionKey key) throws IOException {
+
+    }
+
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

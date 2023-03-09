@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessageManagment {
     private final int COMMAND = 0;
@@ -26,6 +27,11 @@ public class MessageManagment {
         this.message = "";
         this.username = "";
         this.replyId = "";
+        this.messageToClient = new ArrayList<>();
+        commandAnalyse(cutMessage());
+    }
+
+    public MessageManagment() throws SQLException, ClassNotFoundException {
         this.messageToClient = new ArrayList<>();
         commandAnalyse(cutMessage());
     }
@@ -103,8 +109,23 @@ public class MessageManagment {
                         } else this.messageToClient.add("ERROR - Not good reply id header");
                     } else this.messageToClient.add("ERROR - User not in database");
                 }
-            }
+                case "CONNECT" -> {
+                    cutMessageToExtractUsername(cutMessage()[USER_ID]);
+                    if(checkUser()) {
+                        this.messageToClient.add("CONNECT");
+                        this.messageToClient.add("true");
+                    }
 
+                    else {
+                        this.messageToClient.add("CONNECT");
+                        this.messageToClient.add("false");
+                        this.messageToClient.add("ERROR - User not exist, please sign up and try again");
+                    }
+                }
+                case "SUBSCRIBE" -> {
+                    //TODO add follow in the following of user
+                }
+            }
 
         } catch (Exception e) {
             System.err.println("ERROR WHEN ANALYSING");
